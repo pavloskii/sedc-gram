@@ -8,6 +8,10 @@ Instagram clone done with Vuejs and Bootstrap on the Vuejs Course at SEDC in 201
 
 https://github.com/pavloskii/sedc-ohrid-2018-vuejs
 
+## Live demo
+
+https://sedcohrid.web.app
+
 ## Download and run project
 
 ```
