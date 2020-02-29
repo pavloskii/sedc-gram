@@ -8,6 +8,7 @@ import Search from "@/views/Search";
 import AddPost from "@/views/AddPost";
 import Activity from "@/views/Activity";
 import Profile from "@/views/Profile";
+import EditProfile from "@/views/EditProfile";
 import DiscoverPeople from "@/views/DiscoverPeople";
 import SinglePostView from "@/views/SinglePostView";
 
@@ -52,6 +53,12 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+    beforeEnter: NavGuard
+  },
+  {
+    path: "/profile/edit",
+    name: "Edit Profile",
+    component: EditProfile,
     beforeEnter: NavGuard
   },
   {

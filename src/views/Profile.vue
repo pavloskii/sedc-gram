@@ -12,9 +12,14 @@
         <p>
           {{ !loggedUser.username ? loggedUser.email : loggedUser.username }}
         </p>
-        <button type="button" class="btn btn-light w-100 border">
+        <router-link
+          to="/profile/edit"
+          tag="button"
+          type="button"
+          class="btn btn-light w-100 border"
+        >
           Edit Profile
-        </button>
+        </router-link>
       </div>
     </div>
     <hr />
@@ -33,7 +38,10 @@
       </div>
     </div>
     <hr />
-    <UserPosts :posts="posts" />
+    <centered-container v-if="loading">
+      <spinner></spinner>
+    </centered-container>
+    <UserPosts v-else :posts="posts" />
   </div>
 </template>
 
@@ -44,9 +52,6 @@ import UserPosts from "@/components/profile/UserPosts.vue";
 export default {
   created() {
     this.$store.dispatch("getPosts", { email: this.loggedUser.email });
-  },
-  methods: {
-    deleteAccount() {}
   },
   computed: {
     ...mapState({

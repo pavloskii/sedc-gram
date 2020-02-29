@@ -38,7 +38,9 @@ export default {
             email: response.data.email,
             token: response.data.idToken,
             refreshToken: response.data.refreshToken,
-            userId: response.data.localId
+            userId: response.data.localId,
+            username: response.data.displayName,
+            image: response.data.profilePicture
           });
 
           router.replace("/");
@@ -71,7 +73,9 @@ export default {
             email: response.data.email,
             token: response.data.idToken,
             refreshToken: response.data.refreshToken,
-            userId: response.data.localId
+            userId: response.data.localId,
+            username: response.data.displayName,
+            image: response.data.profilePicture
           });
 
           router.replace("/");
@@ -96,45 +100,40 @@ export default {
         commit("setUser", {
           email: decoded.email,
           token: token,
-          userId: decoded["user_id"]
+          userId: decoded["user_id"],
+          username: decoded.name,
+          image: decoded.picture
         });
       } catch (err) {
         console.log(err);
       }
     },
-    deleteAccount({ commit, state }) {
+    deleteAccount({ commit, state, dispatch }) {
       axiosAuth
         .post("/accounts:delete?key=" + apiKey, {
-          idToken: state.loggedUser.userId
+          idToken: state.loggedUser.token
         })
-        .then(response => {
-          console.log(response);
+        .then(() => {
+          dispatch("logout");
         })
         .catch(error => commit("setError", error.response.data.error.message));
     },
-    updateAccount({ commit, state }, payload) {
+    updateAccount({ commit, state }, { username, image }) {
       axiosAuth
         .post("/accounts:update?key=" + apiKey, {
-          idToken: state.loggedUser.userId,
-          displayName: !payload.username
-            ? state.loggedUser.displayName
-            : payload.displayName,
-          photoUrl: !payload.image ? state.loggedUser.image : payload.image
+          idToken: state.loggedUser.token,
+          displayName: !username ? state.loggedUser.displayName : username,
+          photoUrl: !image ? state.loggedUser.image : image
         })
         .then(response => {
-          const expiresAtDate =
-            new Date().getTime() + Number(response.data.expiresIn) * 1000;
-
-          localStorage.setItem("token", response.data.idToken);
-          localStorage.setItem("expiresAt", expiresAtDate);
-
           commit("setUser", {
             email: response.data.email,
-            token: response.data.idToken,
             userId: response.data.localId,
             username: response.data.displayName,
             image: response.data.photoUrl
           });
+
+          router.replace("/profile");
         })
         .catch(error => commit("setError", error.response.data.error.message));
     }

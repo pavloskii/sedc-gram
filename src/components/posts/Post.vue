@@ -26,7 +26,7 @@
     <div class="card-body">
       <div>
         <like :likes="post.likes" :postId="post.postId" ref="like"></like>
-        <i class="fa fa-lg fa-comment-o"></i>
+        <i class="fa fa-lg fa-comment-o ml-2"></i>
       </div>
       <p>{{ likes }} likes</p>
       <p class="card-text">
