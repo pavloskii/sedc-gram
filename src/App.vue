@@ -1,32 +1,61 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+  <div>
+    <Header v-if="isAuth"></Header>
+    <router-view></router-view>
+    <Footer v-if="isAuth"></Footer>
   </div>
 </template>
 
+<script>
+import Header from "@/components/shared/Header";
+import Footer from "@/components/shared/Footer";
+
+export default {
+  components: {
+    Header,
+    Footer
+  },
+  computed: {
+    isAuth() {
+      return this.$store.getters.isUserAuthenticated;
+    }
+  }
+};
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "./assets/css/animations.css";
+
+body {
+  padding-top: 45px;
+  padding-bottom: 45px;
+  background-color: #fafafa;
+  font-family: "Open Sans", sans-serif;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
   text-align: center;
-  color: #2c3e50;
+  font-size: 12px;
+  line-height: 1.42857;
 }
 
-#nav {
-  padding: 30px;
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  border-radius: 35px;
+  font-size: 24px;
+  line-height: 1.33;
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.color-black {
+  color: black;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.vertical-align {
+  display: flex;
+  align-items: center;
 }
 </style>
