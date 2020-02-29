@@ -24,10 +24,10 @@ export default {
 
 <style>
 .logo {
-  height: 40px;
+  height: 30px;
 }
 .custom-navbar {
-  max-height: 45px;
+  max-height: 53px;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 0.25rem;

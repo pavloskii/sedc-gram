@@ -37,11 +37,15 @@ export default {
           console.log(error);
         });
     },
-    getPosts({ commit }) {
+    getPosts({ commit }, { email }) {
       commit("setLoading", true);
 
+      const url = !email
+        ? "/posts.json"
+        : `/posts.json?orderBy="email"&equalTo="${email}"&print=pretty`;
+
       axiosDatabase
-        .get("/posts.json")
+        .get(url)
         .then(response => {
           const posts = Object.keys(response.data)
             .map(key => {
@@ -91,6 +95,29 @@ export default {
           commit("setPost", response.data);
         })
         .catch(error => console.log(error));
+    },
+    getUsersPosts({ commit }) {
+      commit("setLoading", true);
+
+      axiosDatabase
+        .get("/posts.json")
+        .then(response => {
+          const posts = Object.keys(response.data)
+            .map(key => {
+              return {
+                postId: key,
+                ...response.data[key]
+              };
+            })
+            .reverse();
+
+          commit("setPosts", posts);
+          commit("setLoading", false);
+        })
+        .catch(error => {
+          commit("setLoading", false);
+          console.log(error);
+        });
     }
   }
 };

@@ -27,7 +27,7 @@ export default {
 @import "./assets/css/animations.css";
 
 body {
-  padding-top: 45px;
+  padding-top: 53px;
   padding-bottom: 45px;
   background-color: #fafafa;
   font-family: "Open Sans", sans-serif;

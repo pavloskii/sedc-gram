@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const apiKey = "AIzaSyCw-lZIhvFfrU2Y2GBbZr2kXO1BmVstvHM";
-const authUrl = "https://www.googleapis.com/identitytoolkit/v3/relyingparty";
+const authUrl = "https://identitytoolkit.googleapis.com/v1";
 const databaseUrl = "https://sedcohrid.firebaseio.com/api";
 const refreshTokenUrl = "https://securetoken.googleapis.com/v1";
 

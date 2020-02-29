@@ -1,5 +1,6 @@
 import { axiosAuth, apiKey, axiosToken } from "../../axiosConfig";
 import router from "../../router";
+import jwtDecode from "jwt-decode";
 
 export default {
   state: {
@@ -18,15 +19,16 @@ export default {
   actions: {
     login({ commit }, payload) {
       axiosAuth
-        .post("/verifyPassword?key=" + apiKey, {
+        .post("/accounts:signInWithPassword?key=" + apiKey, {
           email: payload.email,
           password: payload.password,
-          returnSecureToken: payload.returnSecureToken
+          returnSecureToken: true
         })
         .then(response => {
           const expiresInMs =
             Number.parseInt(response.data.expiresIn, 10) * 1000;
-          const expiresAtDate = new Date(new Date().getTime() + expiresInMs);
+          // const expiresAtDate = new Date(new Date().getTime() + expiresInMs);
+          const expiresAtDate = new Date().getTime() + expiresInMs;
 
           localStorage.setItem("token", response.data.idToken);
           localStorage.setItem("expiresAt", expiresAtDate);
@@ -50,7 +52,7 @@ export default {
     },
     signup({ commit }, payload) {
       axiosAuth
-        .post("/signupNewUser?key=" + apiKey, {
+        .post("/accounts:signUp?key=" + apiKey, {
           email: payload.email,
           password: payload.password,
           returnSecureToken: true
@@ -58,7 +60,8 @@ export default {
         .then(response => {
           const expiresInMs =
             Number.parseInt(response.data.expiresIn, 10) * 1000;
-          const expiresAtDate = new Date(new Date().getTime() + expiresInMs);
+          // const expiresAtDate = new Date(new Date().getTime() + expiresInMs);
+          const expiresAtDate = new Date().getTime() + expiresInMs;
 
           localStorage.setItem("token", response.data.idToken);
           localStorage.setItem("refreshToken", response.data.refreshToken);
@@ -77,15 +80,63 @@ export default {
           commit("setError", error.response.data.error.message);
         });
     },
-    autoLogin({ commit }, payload) {
-      return;
-      // axiosToken.post('token?key=' + apiKey, {
-      //     grant_type: "refresh_token",
-      //     refresh_token: payload.refreshToken
-      // }).then(response => {
-      //     console.log(response);
-      // })
-      // commit()
+    autoLogin({ commit }) {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return;
+      }
+      const expiresAt = localStorage.getItem("expiresAt");
+      if (expiresAt <= new Date().getTime()) {
+        return;
+      }
+
+      try {
+        const decoded = jwtDecode(token);
+
+        commit("setUser", {
+          email: decoded.email,
+          token: token,
+          userId: decoded["user_id"]
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    deleteAccount({ commit, state }) {
+      axiosAuth
+        .post("/accounts:delete?key=" + apiKey, {
+          idToken: state.loggedUser.userId
+        })
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => commit("setError", error.response.data.error.message));
+    },
+    updateAccount({ commit, state }, payload) {
+      axiosAuth
+        .post("/accounts:update?key=" + apiKey, {
+          idToken: state.loggedUser.userId,
+          displayName: !payload.username
+            ? state.loggedUser.displayName
+            : payload.displayName,
+          photoUrl: !payload.image ? state.loggedUser.image : payload.image
+        })
+        .then(response => {
+          const expiresAtDate =
+            new Date().getTime() + Number(response.data.expiresIn) * 1000;
+
+          localStorage.setItem("token", response.data.idToken);
+          localStorage.setItem("expiresAt", expiresAtDate);
+
+          commit("setUser", {
+            email: response.data.email,
+            token: response.data.idToken,
+            userId: response.data.localId,
+            username: response.data.displayName,
+            image: response.data.photoUrl
+          });
+        })
+        .catch(error => commit("setError", error.response.data.error.message));
     }
   }
 };

@@ -22,11 +22,11 @@ Vue.component("centered-container", CenteredContainer);
 
 Vue.config.productionTip = false;
 
+//Auto login
+store.dispatch("autoLogin");
+
 new Vue({
   router,
   store,
-  render: h => h(App),
-  beforeCreate() {
-    this.$store.dispatch("autoLogin");
-  }
+  render: h => h(App)
 }).$mount("#app");

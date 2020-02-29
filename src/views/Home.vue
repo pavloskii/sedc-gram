@@ -42,7 +42,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("getPosts");
+    this.$store.dispatch("getPosts", { email: "" });
   },
   computed: {
     ...mapState({
