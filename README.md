@@ -1,8 +1,4 @@
-<img  src="./src/assets/instagram.png"  alt="Instagram logo"  width="200" > 
-+ 
-<img  src="./src/assets/sedc.png"  alt="SEDC logo"  width="200" >
-+
-<img  src="./src/assets/vue.png"  alt="Vuejs logo"  height="50" >
+<img  src="./src/assets/instagram.png"  alt="Instagram logo"  width="200" >|<img  src="./src/assets/sedc.png"  alt="SEDC logo"  width="200" >|<img  src="./src/assets/vue.png"  alt="Vuejs logo"  height="50" >
 
 ## Sedcgram
 
